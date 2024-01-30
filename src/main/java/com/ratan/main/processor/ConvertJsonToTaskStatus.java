@@ -13,7 +13,6 @@ public class ConvertJsonToTaskStatus implements Processor {
 
 	@Override
 	public void process(Exchange exchange) throws Exception {
-		System.out.println("Hello From First Processor");
 		String body = exchange.getIn().getBody(String.class);
 		ArrayList<String> allTask = new ArrayList<String>(Arrays.asList(body.split("},")));
 		int numberOfTask = allTask.size();

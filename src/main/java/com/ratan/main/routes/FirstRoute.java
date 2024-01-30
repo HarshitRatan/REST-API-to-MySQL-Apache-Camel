@@ -1,5 +1,7 @@
 package com.ratan.main.routes;
 
+import java.util.ArrayList;
+
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.springframework.stereotype.Component;
@@ -33,17 +35,28 @@ public class FirstRoute extends RouteBuilder {
 						.log("Exception Occurs !!!! ${exception.message}")
 				.endChoice()
 				.otherwise()
-					.log("Updating the Row.....")
 					.process(exchange->{
-						TaskStatus task = (TaskStatus) exchange.getProperty("originalBody");
-						exchange.getIn().setBody(task);
+						TaskStatus originalTask = (TaskStatus) exchange.getProperty("originalBody");
+						ArrayList<?> dbTaskList = (ArrayList<?>) exchange.getIn().getBody();
+						TaskStatus dbTask = (TaskStatus) dbTaskList.get(0);
+						if(originalTask.checkEqual(dbTask)) {
+							exchange.getIn().setBody("");
+						} else {
+							exchange.getIn().setBody(originalTask);
+						}
 					})
-					.doTry()
-						.to("mybatis:mybatis.ratan.requestUpdate?StatementType=Update")
-						.log("Updated Sucessfully. ${body}")
-					.doCatch(Exception.class)
-						.log("Exception Occurs !!!! ${exception.message}")
+					.choice()
+						.when(simple("${body} != ''"))
+							.log("Updating the Row.....")
+							.doTry()
+								.to("mybatis:mybatis.ratan.requestUpdate?StatementType=Update")
+								.log("Updated Sucessfully. ${body}")
+							.doCatch(Exception.class)
+								.log("Exception Occurs !!!! ${exception.message}")
+						.endChoice()
+					.end()
 				.endChoice()
 		.end();
+		System.out.println("All data are up to date :)");
 	}
 }
