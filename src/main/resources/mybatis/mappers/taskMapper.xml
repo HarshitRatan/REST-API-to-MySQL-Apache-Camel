@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mybatis.ratan">
+	<select id="requestSelect"
+		resultType="com.ratan.main.utils.TaskStatus">
+		select * from task_list
+	</select>
+
+	<update id="requestUpdate"
+		parameterType="com.ratan.main.utils.TaskStatus">
+		UPDATE task_list
+		SET title = #{title, jdbcType=VARCHAR}
+		WHERE id = #{id, jdbcType=NUMERIC}
+	</update>
+
+	<insert id="requestInsert"
+		parameterType="com.ratan.main.utils.TaskStatus">
+		insert into task_list(user_id, id, title, completed)
+		values(#{userId, jdbcType=INTEGER}, #{id},#{title, jdbcType=VARCHAR},#{completed})
+	</insert>
+</mapper>
