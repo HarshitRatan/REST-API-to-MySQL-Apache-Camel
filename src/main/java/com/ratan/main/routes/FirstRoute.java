@@ -22,7 +22,6 @@ public class FirstRoute extends RouteBuilder {
 		.choice()
 				.when(simple("${body} == ''"))
 					.log("Inserting New Row.....")
-					.log("Body ::: ${body}")
 					.process(exchange->{
 						TaskStatus task = (TaskStatus) exchange.getProperty("originalBody");
 						exchange.getIn().setBody(task);
