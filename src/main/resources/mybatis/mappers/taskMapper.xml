@@ -2,21 +2,21 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="mybatis.ratan">
-	<select id="requestSelect"
+	<select id="requestSelectById"
 		resultType="com.ratan.main.utils.TaskStatus">
-		select * from task_list
+		select * from task_list where id = #{id};
 	</select>
 
 	<update id="requestUpdate"
 		parameterType="com.ratan.main.utils.TaskStatus">
-		UPDATE task_list
-		SET title = #{title, jdbcType=VARCHAR}
-		WHERE id = #{id, jdbcType=NUMERIC}
+		update task_list set title = #{title}, completed=#{completed},
+		user_id = #{userId} where id = #{id};
 	</update>
 
 	<insert id="requestInsert"
 		parameterType="com.ratan.main.utils.TaskStatus">
 		insert into task_list(user_id, id, title, completed)
-		values(#{userId, jdbcType=INTEGER}, #{id},#{title, jdbcType=VARCHAR},#{completed})
+		values(#{userId, jdbcType=INTEGER}, #{id},#{title,
+		jdbcType=VARCHAR},#{completed})
 	</insert>
 </mapper>
